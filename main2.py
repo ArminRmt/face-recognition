@@ -32,11 +32,18 @@ def load_images(subset):
     # Load images from the selected subfolder
     person_folder = os.path.join(base_folder, str(selected_subfolder))
     for img_name in os.listdir(person_folder):
-        img_path = os.path.join(person_folder, img_name)
-        img = tf.keras.preprocessing.image.load_img(img_path, target_size=(160, 160))
-        img_array = tf.keras.preprocessing.image.img_to_array(img)
-        data.append(img_array)
-        labels.append(selected_subfolder)
+        # Extract the number part from img_name
+        img_number = int(os.path.splitext(img_name)[0])
+
+        # Check if the img_number is in the subset
+        if img_number in subset:
+            img_path = os.path.join(person_folder, img_name)
+            img = tf.keras.preprocessing.image.load_img(
+                img_path, target_size=(160, 160)
+            )
+            img_array = tf.keras.preprocessing.image.img_to_array(img)
+            data.append(img_array)
+            labels.append(selected_subfolder)
 
     return np.array(data), np.array(labels)
 
